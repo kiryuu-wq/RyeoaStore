@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Buy Panel - Neon Anime Theme</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+<style>
+  /* Reset and base */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-size: 400% 400%;
+    animation: bgGradient 30s ease infinite;
+    overflow-x: hidden;
+  }
+  @keyframes bgGradient {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+  }
+  /* Neon animated shapes background */
+  body::before {
+    content: "";
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background:
+      radial-gradient(circle at 25% 25%, rgba(198 134 255 / 0.15), transparent 40%),
+      radial-gradient(circle at 75% 75%, rgba(0 255 218 / 0.15), transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(255 102 255 / 0.1), transparent 50%);
+    animation: pulseNeon 15s ease-in-out infinite alternate;
+    z-index: -1;
+  }
+  @keyframes pulseNeon {
+    0%, 100% {opacity: 0.6;}
+    50% {opacity: 0.9;}
+  }
+
+  header {
+    background: rgba(12, 28, 51, 0.85);
+    backdrop-filter: blur(16px);
+    padding: 1rem 2rem;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #b892ff;
+    text-align: center;
+    letter-spacing: 1.5px;
+  }
+
+  main {
+    flex-grow: 1;
+    max-width: 1024px;
+    margin: 2rem auto;
+    background: rgba(12, 28, 51, 0.8);
+    backdrop-filter: blur(16px);
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(139,92,246,0.5);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 2rem;
+  }
+
+  @media(min-width: 768px){
+    main {
+      grid-template-columns: 1.2fr 1fr;
+    }
+  }
+
+  /* Buy panel container */
+  .buy-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #d8bfff;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid #8c4bff;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Select packages container */
+  .package-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+  }
+
+  .package-option {
+    background: rgba(48, 21, 85, 0.6);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    user-select: none;
+  }
+  .package-option:hover,
+  .package-option.selected {
+    background: #7e57c2;
+    border-color: #b892ff;
+    box-shadow: 0 0 12px #b892ff;
+    color: #fff;
+  }
+  .package-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+  }
+  .package-price {
+    font-size: 1rem;
+    color: #eee;
+  }
+
+  /* Loading animation */
+  .loading-panel {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.2rem;
+    color: #d8bfff;
+  }
+
+  .loading-panel.show {
+    display: flex;
+  }
+
+  .spinner {
+    border: 4px solid transparent;
+    border-top-color: #b892ff;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Payment and contact */
+  .payment-info {
+    margin-top: 2rem;
+    border-top: 2px solid #7c52f0;
+    padding-top: 1.5rem;
+  }
+  .payment-methods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+  }
+  .payment-method {
+    background: #1e1e2f;
+    padding: 0.8rem 1.2rem;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    color: #b892ff;
+    font-weight: 600;
+    user-select: none;
+    transition: background-color 0.25s ease;
+  }
+  .payment-method:hover {
+    background-color: #7c52f0;
+    color: #fff;
+  }
+  .payment-method .material-icons {
+    font-size: 20px;
+  }
+
+  /* Order details panel */
+  .order-details {
+    background: rgba(24, 8, 54, 0.85);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 0 20px #7c52f0aa;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .order-details h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #d1b3ff;
+    border-bottom: 1px solid #8c4bff88;
+    padding-bottom: 0.5rem;
+  }
+
+  label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: block;
+    margin-bottom: 0.25rem;
+    color: #a69ee0;
+  }
+
+  .order-info {
+    background: rgba(54, 25, 114, 0.6);
+    padding: 0.9rem 1rem;
+    border-radius: 8px;
+    color: #e5e5ff;
+    font-size: 1rem;
+    min-height: 26px;
+    line-height: 1.3;
+    user-select: text;
+  }
+
+  input[type="text"], input[type="file"] {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    background: rgba(48, 21, 85, 0.8);
+    color: #eee;
+    box-shadow: inset 0 0 8px #7c52f0aa;
+    transition: box-shadow 0.3s ease;
+  }
+  input[type="text"]:focus, input[type="file"]:focus {
+    box-shadow: 0 0 12px #b892ffcc;
+  }
+
+  /* Submission button */
+  .btn-buy {
+    margin-top: 1rem;
+    background: linear-gradient(135deg, #8c52f0, #b892ff);
+    border: none;
+    padding: 1rem 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fff;
+    border-radius: 16px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: box-shadow 0.4s ease;
+  }
+  .btn-buy:hover:not(:disabled) {
+    box-shadow: 0 0 20px #9d6fff;
+  }
+  .btn-buy:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  /* Responsive */
+  @media(max-width: 640px) {
+    main {
+      margin: 1rem;
+      padding: 1rem;
+    }
+    .package-options {
+      grid-template-columns: repeat(auto-fit,minmax(110px,1fr));
+      gap: 0.8rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <header>Buy Panel Ptheoradity</header>
+  <main>
+    <section class="buy-panel" aria-label="Package selection and purchase form">
+      <div class="title">Pilih Paket Panel Anda</div>
+      <div class="package-options" role="list" tabindex="0" aria-label="List of available packages">
+        <!-- Each package -->
+        <div class="package-option" role="option" data-text="1GB" data-price="1000" tabindex="0">
+          <div class="package-title">1GB</div>
+          <div class="package-price">Rp 1.000</div>
+        </div>
+        <div class="package-option" role="option" data-text="2GB" data-price="2000" tabindex="0">
+          <div class="package-title">2GB</div>
+          <div class="package-price">Rp 2.000</div>
+        </div>
+        <div class="package-option" role="option" data-text="3GB" data-price="3000" tabindex="0">
+          <div class="package-title">3GB</div>
+          <div class="package-price">Rp 3.000</div>
+        </div>
+        <div class="package-option" role="option" data-text="4GB" data-price="4000" tabindex="0">
+          <div class="package-title">4GB</div>
+          <div class="package-price">Rp 4.000</div>
+        </div>
+        <div class="package-option" role="option" data-text="5GB" data-price="5000" tabindex="0">
+          <div class="package-title">5GB</div>
+          <div class="package-price">Rp 5.000</div>
+        </div>
+        <div class="package-option" role="option" data-text="6GB" data-price="6000" tabindex="0">
+          <div class="package-title">6GB</div>
+          <div class="package-price">Rp 6.000</div>
+        </div>
+        <div class="package-option" role="option" data-text="7GB" data-price="7000" tabindex="0">
+          <div class="package-title">7GB</div>
+          <div class="package-price">Rp 7.000</div>
+        </div>
+        <div class="package-option" role="option" data-text="8GB" data-price="8000" tabindex="0">
+          <div class="package-title">8GB</div>
+          <div class="package-price">Rp 8.000</div>
+        </div>
+        <div class="package-option" role="option" data-text="9GB" data-price="9000" tabindex="0">
+          <div class="package-title">9GB</div>
+          <div class="package-price">Rp 9.000</div>
+        </div>
+        <div class="package-option" role="option" data-text="10GB" data-price="10000" tabindex="0">
+          <div class="package-title">10GB</div>
+          <div class="package-price">Rp 10.000</div>
+        </div>
+        <div class="package-option" role="option" data-text="UNLIMITED" data-price="12000" tabindex="0">
+          <div class="package-title">UNLIMITED</div>
+          <div class="package-price">Rp 12.000</div>
+        </div>
+        <div class="package-option" role="option" data-text="RESELLER PANEL" data-price="10000" tabindex="0">
+          <div class="package-title">RESELLER PANEL</div>
+          <div class="package-price">Rp 10.000</div>
+        </div>
+        <div class="package-option" role="option" data-text="OWNER PANEL" data-price="20000" tabindex="0">
+          <div class="package-title">OWNER PANEL</div>
+          <div class="package-price">Rp 20.000</div>
+        </div>
+        <div class="package-option" role="option" data-text="ADMIN PANEL" data-price="15000" tabindex="0">
+          <div class="package-title">ADMIN PANEL</div>
+          <div class="package-price">Rp 15.000</div>
+        </div>
+        <div class="package-option" role="option" data-text="TANGAN KANAN PANEL" data-price="25000" tabindex="0">
+          <div class="package-title">TANGAN KANAN PANEL</div>
+          <div class="package-price">Rp 25.000</div>
+        </div>
+        <div class="package-option" role="option" data-text="PARTNER PANEL" data-price="18000" tabindex="0">
+          <div class="package-title">PARTNER PANEL</div>
+          <div class="package-price">Rp 18.000</div>
+        </div>
+      </div>
+
+      <button class="btn-buy" aria-live="polite" aria-busy="false" aria-label="Buy selected package" disabled>Buy Sekarang</button>
+
+      <div class="loading-panel" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="spinner" aria-hidden="true"></div>
+        <div>Processing your order...</div>
+      </div>
+
+      <div class="payment-info">
+        <div><strong>Metode Pembayaran:</strong></div>
+        <div class="payment-methods">
+          <div class="payment-method" id="btn-copy-dana" tabindex="0" role="button" aria-label="Salin nomor Dana">
+            <span class="material-icons" aria-hidden="true">content_copy</span> Salin Nomor Dana: 085715578506
+          </div>
+          <a href="https://files.catbox.moe/2hv398.jpg" target="_blank" rel="noopener" class="payment-method" aria-label="Buka link QRIS">
+            <span class="material-icons" aria-hidden="true">qr_code</span> QRIS
+          </a>
+          <a href="https://wa.me/6281234567890" target="_blank" rel="noopener" class="payment-method" aria-label="Chat WhatsApp ke nomor admin">
+            <span class="material-icons" aria-hidden="true">chat</span> Hubungi WhatsApp
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="order-details" aria-label="Order details and account information">
+      <h2>Detail Pesanan</h2>
+      <div>
+        <label for="order-nominal">Nominal</label>
+        <div id="order-nominal" class="order-info" tabindex="0" aria-live="polite">-</div>
+      </div>
+      <div>
+        <label for="order-barang">Barang</label>
+        <div id="order-barang" class="order-info" tabindex="0" aria-live="polite">-</div>
+      </div>
+      <div>
+        <label for="order-waktu">Waktu Transaksi</label>
+        <div id="order-waktu" class="order-info" tabindex="0" aria-live="polite">-</div>
+      </div>
+      <div>
+        <label for="order-notarget">No Target (untuk dikirim data akun panel)</label>
+        <input type="text" id="order-notarget" name="order-notarget" placeholder="Masukkan nomor target" aria-required="true" />
+      </div>
+      <div>
+        <label for="order-namaakun">Nama Data Akun Panel Anda</label>
+        <input type="text" id="order-namaakun" name="order-namaakun" placeholder="Nama akun panel Anda" aria-required="true" />
+      </div>
+      <div>
+        <label for="order-bukti">Sertakan Bukti Transfer</label>
+        <input type="file" id="order-bukti" name="order-bukti" aria-required="true" accept="image/*,application/pdf" />
+      </div>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const packageEls = document.querySelectorAll('.package-option');
+      const btnBuy = document.querySelector('.btn-buy');
+      const loadingPanel = document.querySelector('.loading-panel');
+      const orderNominalEl = document.getElementById('order-nominal');
+      const orderBarangEl = document.getElementById('order-barang');
+      const orderWaktuEl = document.getElementById('order-waktu');
+      const inputNoTarget = document.getElementById('order-notarget');
+      const inputNamaAkun = document.getElementById('order-namaakun');
+      const btnCopyDana = document.getElementById('btn-copy-dana');
+
+      let selectedPackage = null;
+
+      function formatCurrency(num) {
+        return 'Rp ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      }
+
+      // Handle package selection
+      packageEls.forEach(el => {
+        el.addEventListener('click', () => selectPackage(el));
+        el.addEventListener('keydown', (e) => {
+          if(e.key === 'Enter' || e.key === ' '){
+            e.preventDefault();
+            selectPackage(el);
+          }
+        });
+      });
+
+      function selectPackage(el){
+        packageEls.forEach(p => p.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedPackage = {
+          text: el.dataset.text,
+          price: Number(el.dataset.price),
+        };
+        updateOrderDetails();
+        btnBuy.disabled = false;
+        btnBuy.setAttribute('aria-busy', 'false');
+      }
+
+      function updateOrderDetails() {
+        if(!selectedPackage) return;
+        orderNominalEl.textContent = formatCurrency(selectedPackage.price);
+        orderBarangEl.textContent = selectedPackage.text;
+        orderWaktuEl.textContent = new Date().toLocaleString('id-ID', { dateStyle:'medium', timeStyle:'short' });
+      }
+
+      // Buy button click handler
+      btnBuy.addEventListener('click', async () => {
+        if(!selectedPackage) return;
+        if(!inputNoTarget.value.trim() || !inputNamaAkun.value.trim()) {
+          alert('Mohon isi No Target dan Nama Data Akun Panel Anda');
+          if(!inputNoTarget.value.trim()) inputNoTarget.focus();
+          else inputNamaAkun.focus();
+          return;
+        }
+        if(!document.getElementById('order-bukti').files.length){
+          alert('Mohon sertakan bukti transfer');
+          document.getElementById('order-bukti').focus();
+          return;
+        }
+
+        btnBuy.disabled = true;
+        btnBuy.setAttribute('aria-busy', 'true');
+        loadingPanel.classList.add('show');
+
+        // Simulate async order processing time (e.g., submitting form or processing payment)
+        await new Promise(r => setTimeout(r, 3500));
+
+        loadingPanel.classList.remove('show');
+        btnBuy.disabled = false;
+        btnBuy.setAttribute('aria-busy', 'false');
+
+        // Compose WhatsApp message with order details
+        const waNumber = '6283170618607'; // modify as needed
+        const noTarget = inputNoTarget.value.trim();
+        const namaAkun = inputNamaAkun.value.trim();
+        const nominal = formatCurrency(selectedPackage.price);
+        const barang = selectedPackage.text;
+        const waktu = orderWaktuEl.textContent;
+
+        const message =
+`Halo Kak Ryeoa,
+Saya ingin melakukan pembelian dengan detail sebagai berikut:
+Nominal: ${nominal}
+Barang: ${barang}
+Waktu transaksi: ${waktu}
+No target (data akun panel dikirim ke): ${noTarget}
+Nama Data Akun Panel: ${namaAkun}
+Mohon segera diproses. Terima kasih.`;
+
+        // Open WhatsApp chat with prefilled message
+        const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
+        window.open(waLink, '_blank');
+      });
+
+      // Copy Dana number button
+      btnCopyDana.addEventListener('click', () => {
+        const danaNumber = '081234567890';
+        navigator.clipboard.writeText(danaNumber).then(() => {
+          btnCopyDana.textContent = 'Nomor Dana disalin!';
+          setTimeout(() => {
+            btnCopyDana.innerHTML = '<span class="material-icons" aria-hidden="true">content_copy</span> Salin Nomor Dana: ' + danaNumber;
+          }, 3000);
+        }).catch(() => {
+          alert('Gagal menyalin nomor Dana. Silakan salin manual.');
+        });
+      });
+      btnCopyDana.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          btnCopyDana.click();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
+
